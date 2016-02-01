@@ -1,5 +1,5 @@
 # R12-Arm
-R12 Robotic Arm C++ interfeace
+R12 Robotic Arm C++ interface
 
 #This code needs curl lib to compile :
 
