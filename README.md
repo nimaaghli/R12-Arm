@@ -5,14 +5,18 @@ R12 Robotic Arm C++ interfeace
 
 ##Install curl in ubuntu:
 
-  ###sudo apt-get install curl
+  ##sudo apt-get install curl
   
 ##Install curl in Mac :
 
-  ###sudo apt-get install curl
+  ##sudo apt-get install curl
   
   or
   
-  ###brew install curl
+  ##brew install curl
   
   
+#Compile : 
+  cd R12-Arm 
+  make
+  ./arm
