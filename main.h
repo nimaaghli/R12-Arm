@@ -13,8 +13,11 @@ void captureImage();
 void saveImage(std::string path_do_images);
 void sendCommand_TMOVETO(int hand,int wrist,int x,int y,int z);
 void sendCommand_HOME();
-int image_seq;
+void captureSave(std::string path);
+int  wrist,hand;
+int  image_seq;
 std::string password;
+struct tmove;
 
 
 #endif /* main_h */

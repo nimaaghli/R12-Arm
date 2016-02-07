@@ -4,40 +4,108 @@
 //
 //  Created by Nima Aghli on 1/28/16.
 //  Copyright © 2016 Nima Aghli. All rights reserved.
-//  this app uses curl lib to send http commands
+//  This app uses curl lib to send http commands
 
 #include <iostream>
 #include <curl/curl.h>
+#include <vector>
 #include "main.h"
 using namespace std;
 
 int main(int argc, const char * argv[]) {
-    password="NAhuygi6djgovuyv";
-    //string path_do_images="/Users/nimaaghli/Documents/Couraea/AI and Robotics/project1_AIClass/project1_AIClass/img/";
+    //password="NAhuygi6djgovuyv";
+    password="ESjdvkasfalkgd";//SHAKERI
+    //password="SMkgbku6tc4hxwy";
+    string path_do_images="/Users/nimaaghli/Documents/Couraea/AI and Robotics/project1_AIClass/project1_AIClass/img/";
+    bool flag=true;
+    vector<double> numbers={-4400,-4400,-4800};
     //saveImage(path_do_images);
-    captureImage();
+    //captureImage();
+    captureSave(path_do_images);
     sendCommand_HOME();
     sendCommand_TMOVETO(3000,-5950, -2752, -1600, 100);
-    sendCommand_TMOVETO(3000,-1950, -2952, -280, -1831);
-    sendCommand_TMOVETO(3000,-1950, -2820, -1100, -1831);
-    sendCommand_TMOVETO(3000,-1950, -2852, -1100, -1631);
-    sendCommand_TMOVETO(3000,-1950, -2922, -280, -1631);
-    sendCommand_TMOVETO(3000,-1950, -2922, -280, -1441);
-    sendCommand_TMOVETO(3000,-1950, -2852, -1100, -1431);
-    sendCommand_TMOVETO(3000,-1950, -2852, -1100, -1231);
-    sendCommand_TMOVETO(3000,-1950, -2922, -280, -1241);
-    sendCommand_TMOVETO(3000,-1950, -2922, -280, -1041);
-    sendCommand_TMOVETO(3000,-1950, -2852, -1100, -1031);
-    sendCommand_TMOVETO(3000,-5950, -2752, -1600, 100);
+    for(int i=-1831;i<=-1031;i+=200){
+        printf("+++i=%d\n",i);
+        if(flag){
+                for(int j=-280;j>=-1100;j-=100){
+                    //sendCommand_TMOVETO(3000,-1050, -2952, -280, -1831);
+                    printf("j=%d",j);
+                    flag=false;
+                    sendCommand_TMOVETO(3000,-950, -2820, j, i);
+                    captureSave(path_do_images);
+            }
+        }
+        
+        else {
+            for(int j=-1100;j<=-280;j+=100){
+                //sendCommand_TMOVETO(3000,-1050, -2952, -280, -1831);
+                printf("j=%d",j);
+                flag=true;
+                sendCommand_TMOVETO(3000,-950, -2820, j, i);
+                captureSave(path_do_images);
+                }
+        }
+        
+        printf("\n");
+    }
 
+    
+    
+    sendCommand_TMOVETO(3000,-5950, -2752, -1600, 100);
+    flag=true;
+    int fix;
+    for(vector<double>::iterator it=numbers.begin();it!=numbers.end();it++){
+        printf("+++i=%f\n",*it);
+        fix=*it;
+        if(flag){
+            for(int j=-300;j>=-1400;j-=100){
+                //sendCommand_TMOVETO(3000,-1050, -2952, -280, -1831);
+                flag=false;
+                printf("j=%d,fix=%d\n",j,fix);
+                sendCommand_TMOVETO(3000,-8600, fix, j, 0);
+                captureSave(path_do_images);
+                fix+=18;
+            }
+        }
+        
+        else {
+            for(int j=-1400;j<=-300;j+=100){
+                //sendCommand_TMOVETO(3000,-1050, -2952, -280, -1831);
+                
+                flag=true;
+                sendCommand_TMOVETO(3000,-8600, fix, j, 0);
+                captureSave(path_do_images);
+                printf("j=%d,fix=%d\n",j,fix);
+                fix-=18;
+            }
+        }
+        
+        printf("\n");
+    }
+   /* sendCommand_TMOVETO(3000,-1050, -2852, -1100, -1631);
+    sendCommand_TMOVETO(3000,-1050, -2922, -280, -1631);
+    sendCommand_TMOVETO(3000,-1050, -2922, -280, -1441);
+    sendCommand_TMOVETO(3000,-1050, -2852, -1100, -1431);
+    sendCommand_TMOVETO(3000,-1050, -2852, -1100, -1231);
+    sendCommand_TMOVETO(3000,-1050, -2922, -280, -1241);
+    sendCommand_TMOVETO(3000,-1050, -2922, -280, -1041);
+    sendCommand_TMOVETO(3000,-1050, -2852, -1100, -1031);
+    
+    
+    
+    sendCommand_TMOVETO(3000,-5950, -2752, -1600, 100);
+    */
  
     
-    sendCommand_TMOVETO(3000,-8500, -4400, -300, 0);
+    /*sendCommand_TMOVETO(3000,-8500, -4400, -300, 0);
     sendCommand_TMOVETO(3000,-8500, -4200, -1400, 0);
     sendCommand_TMOVETO(3000,-8500, -4400, -1400, 0);
     sendCommand_TMOVETO(3000,-8500, -4600, -300, 0);
     sendCommand_TMOVETO(3000,-8500, -4800, -300, 0);
     sendCommand_TMOVETO(3000,-8500, -4700, -1400, 0);
+    */
+    
+    
     sendCommand_TMOVETO(3000,-5950, -2752, -1600, 100);
     sendCommand_HOME();
    
@@ -93,7 +161,7 @@ void saveImage(string path){
         
         if( fp == NULL ) cout << "File cannot be opened";
         
-        curl_easy_setopt(image, CURLOPT_URL, "http://www.d10.karoo.net/ruby/quiz/50/duck.bmp");
+        curl_easy_setopt(image, CURLOPT_URL, "http://debatedecide.fit.edu/robot/last.bmp");
         curl_easy_setopt(image, CURLOPT_WRITEFUNCTION, NULL);
         curl_easy_setopt(image, CURLOPT_WRITEDATA, fp);
         
@@ -172,7 +240,11 @@ void sendCommand_HOME(){
     curl_global_cleanup();
 }
 
-
+void captureSave(string path){
+    saveImage(path);
+    captureImage();
+    
+}
 
 
 
