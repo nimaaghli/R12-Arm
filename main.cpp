@@ -18,48 +18,50 @@ int main(int argc, const char * argv[]) {
     //password="SMkgbku6tc4hxwy";
     string path_do_images="/Users/nimaaghli/Documents/Couraea/AI and Robotics/project1_AIClass/project1_AIClass/img/";
     bool flag=true;
-    vector<double> numbers={-4400,-4400,-4800};
+    int fix;
+    vector<double> numbers={-4200,-4200,-4600};
+    
     //saveImage(path_do_images);
     //captureImage();
-    captureSave(path_do_images);
+    //captureSave(path_do_images);
     sendCommand_HOME();
-    sendCommand_TMOVETO(3000,-5950, -2752, -1600, 100);
+    //sendCommand_TMOVETO(3000,-5950, -2400, -1600, 100);
     for(int i=-1831;i<=-1031;i+=200){
         printf("+++i=%d\n",i);
         if(flag){
+            fix=-2620;
                 for(int j=-280;j>=-1100;j-=100){
                     //sendCommand_TMOVETO(3000,-1050, -2952, -280, -1831);
-                    printf("j=%d",j);
+                    printf("j=%d,fix=%d",j,fix);
                     flag=false;
-                    sendCommand_TMOVETO(3000,-950, -2820, j, i);
-                    captureSave(path_do_images);
+                    sendCommand_TMOVETO(3000,-1850, fix, j, i);//-2620
+                    //captureSave(path_do_images);
+                    fix+=18;
             }
         }
         
         else {
+            fix=-2476;
             for(int j=-1100;j<=-280;j+=100){
                 //sendCommand_TMOVETO(3000,-1050, -2952, -280, -1831);
                 printf("j=%d",j);
                 flag=true;
-                sendCommand_TMOVETO(3000,-950, -2820, j, i);
-                captureSave(path_do_images);
+                sendCommand_TMOVETO(3000,-1850, fix, j, i);
+                //captureSave(path_do_images);
+                fix-=18;
                 }
         }
         
         printf("\n");
     }
-
-    
-    
-    sendCommand_TMOVETO(3000,-5950, -2752, -1600, 100);
+    sendCommand_TMOVETO(3000,-5950, -2500, -1600, 100);//GO TO BASE
     flag=true;
-    int fix;
+    fix=0;
     for(vector<double>::iterator it=numbers.begin();it!=numbers.end();it++){
         printf("+++i=%f\n",*it);
         fix=*it;
         if(flag){
             for(int j=-300;j>=-1400;j-=100){
-                //sendCommand_TMOVETO(3000,-1050, -2952, -280, -1831);
                 flag=false;
                 printf("j=%d,fix=%d\n",j,fix);
                 sendCommand_TMOVETO(3000,-8600, fix, j, 0);
@@ -70,7 +72,6 @@ int main(int argc, const char * argv[]) {
         
         else {
             for(int j=-1400;j<=-300;j+=100){
-                //sendCommand_TMOVETO(3000,-1050, -2952, -280, -1831);
                 
                 flag=true;
                 sendCommand_TMOVETO(3000,-8600, fix, j, 0);
@@ -82,7 +83,10 @@ int main(int argc, const char * argv[]) {
         
         printf("\n");
     }
-   /* sendCommand_TMOVETO(3000,-1050, -2852, -1100, -1631);
+   /*
+    sendCommand_TMOVETO(3000,-1050, -2952, -280, -1831);
+    sendCommand_TMOVETO(3000,-1050, -2952, -1100, -1831);
+    sendCommand_TMOVETO(3000,-1050, -2852, -1100, -1631);
     sendCommand_TMOVETO(3000,-1050, -2922, -280, -1631);
     sendCommand_TMOVETO(3000,-1050, -2922, -280, -1441);
     sendCommand_TMOVETO(3000,-1050, -2852, -1100, -1431);
@@ -106,8 +110,8 @@ int main(int argc, const char * argv[]) {
     */
     
     
-    sendCommand_TMOVETO(3000,-5950, -2752, -1600, 100);
-    sendCommand_HOME();
+    //sendCommand_TMOVETO(3000,-5950, -2752, -1600, 100);
+    //sendCommand_HOME();
    
     
     return 0;
