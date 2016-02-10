@@ -1,1 +1,76 @@
-<html><head><meta content="text/html; charset=UTF-8" http-equiv="content-type"><style type="text/css">@import url('https://themes.googleusercontent.com/fonts/css?kit=Lx1xfUTR4qFjwg0Z_pb901bqibjAC9TcrSzAoXtxa2E');ol{margin:0;padding:0}table td,table th{padding:0}.c3{color:#000000;font-weight:normal;text-decoration:none;vertical-align:baseline;font-size:11pt;font-family:"Helvetica Neue";font-style:normal}.c1{color:#000000;font-weight:bold;text-decoration:none;vertical-align:baseline;font-size:11pt;font-family:"Helvetica Neue";font-style:normal}.c0{padding-top:0pt;padding-bottom:0pt;line-height:1.0;orphans:2;widows:2;text-align:left}.c6{background-color:#ffffff;max-width:468pt;padding:72pt 72pt 72pt 72pt}.c4{orphans:2;widows:2}.c5{font-size:11pt;font-family:"Helvetica Neue"}.c2{height:12pt}.title{padding-top:24pt;color:#000000;font-weight:bold;font-size:36pt;padding-bottom:6pt;font-family:"Times New Roman";line-height:1.0;page-break-after:avoid;orphans:2;widows:2;text-align:left}.subtitle{padding-top:18pt;color:#666666;font-size:24pt;padding-bottom:4pt;font-family:"Georgia";line-height:1.0;page-break-after:avoid;font-style:italic;orphans:2;widows:2;text-align:left}li{color:#000000;font-size:12pt;font-family:"Times New Roman"}p{margin:0;color:#000000;font-size:12pt;font-family:"Times New Roman"}h1{padding-top:24pt;color:#000000;font-weight:bold;font-size:24pt;padding-bottom:6pt;font-family:"Times New Roman";line-height:1.0;page-break-after:avoid;orphans:2;widows:2;text-align:left}h2{padding-top:18pt;color:#000000;font-weight:bold;font-size:18pt;padding-bottom:4pt;font-family:"Times New Roman";line-height:1.0;page-break-after:avoid;orphans:2;widows:2;text-align:left}h3{padding-top:14pt;color:#000000;font-weight:bold;font-size:14pt;padding-bottom:4pt;font-family:"Times New Roman";line-height:1.0;page-break-after:avoid;orphans:2;widows:2;text-align:left}h4{padding-top:12pt;color:#000000;font-weight:bold;font-size:12pt;padding-bottom:2pt;font-family:"Times New Roman";line-height:1.0;page-break-after:avoid;orphans:2;widows:2;text-align:left}h5{padding-top:11pt;color:#000000;font-weight:bold;font-size:11pt;padding-bottom:2pt;font-family:"Times New Roman";line-height:1.0;page-break-after:avoid;orphans:2;widows:2;text-align:left}h6{padding-top:10pt;color:#000000;font-weight:bold;font-size:10pt;padding-bottom:2pt;font-family:"Times New Roman";line-height:1.0;page-break-after:avoid;orphans:2;widows:2;text-align:left}</style></head><body class="c6"><div><p class="c2 c4"><span></span></p></div><p class="c0"><span class="c3">We have used curl c++ library to be able to send commands while the robot server answers only to http commands.</span></p><p class="c0"><span class="c3">functions :</span></p><p class="c0 c2"><span></span></p><p class="c0"><span class="c1">captureImage();</span></p><p class="c0"><span class="c3">Calling This function will send a image capture command to server in order to take a picture with the camera </span><span class="c5">connect</span><span class="c3">&nbsp;to endpoint of arm.</span></p><p class="c0"><span class="c3">The taken picture will be saved in this link http://debatedecide.fit.edu/robot/last.bmp</span></p><p class="c0"><span class="c1">saveImage(string path_to_images);</span></p><p class="c0"><span class="c3">This function downloads the latest image taken by captureImage(); and saves it to the path given by user as a parameter to function.The </span><span class="c5">message</span><span class="c3">&nbsp;will be returned based on if the execution was successful or failed with error message .</span></p><p class="c0"><span class="c1">sendCommand_TMOVETO(int hand,int wrist,int x,int y,int z);</span></p><p class="c0"><span class="c3">Calling this function will send a TMOVETO command to arm with the parameters hand as hand position , wrist as wrist position and x,y,z parameters for the robot to move endpoint to desired x,y,z position.</span></p><p class="c0"><span class="c1">sendCommand_HOME();</span></p><p class="c0"><span class="c3">This Function will send a command to arm to go its home position.</span></p><p class="c0"><span class="c1">captureSave(std::string path);</span></p><p class="c0"><span class="c3">This Function is combination of function capture image and save image with will constantly take picture and save it to the path defined by user as an input parameter to function</span></p><p class="c0 c2"><span></span></p><p class="c0 c2"><span></span></p><p class="c0"><span class="c1">Algorithm</span><span class="c3">&nbsp;: There are &nbsp;2 main loops one for scanning front and one for top side . given correct values as position of object in space the algorithm will start to scan the front side of object from one corner to </span><span class="c5">another</span><span class="c3">&nbsp;corner by taking small steps and while each step it will take a picture and save it to the local machine (this will be used later to process images to find objects).</span></p><p class="c0"><span class="c3">The value of password variable needs to be set so the program can work otherwise the curl lib will return error message.</span></p><p class="c0 c2"><span></span></p><p class="c0 c2"><span></span></p><p class="c0"><span class="c1">How to run code :</span></p><p class="c0"><span class="c3">&nbsp;</span></p><p class="c0"><span class="c3">This code needs curl lib to compile :</span></p><p class="c0"><span class="c3">Install curl in ubuntu:</span></p><p class="c0 c2"><span></span></p><p class="c0"><span class="c3">&nbsp; &nbsp; sudo apt-get install curl</span></p><p class="c0 c2"><span></span></p><p class="c0"><span class="c3">Install curl in Mac :</span></p><p class="c0 c2"><span></span></p><p class="c0"><span class="c3">&nbsp; &nbsp; sudo apt-get install curl</span></p><p class="c0 c2"><span></span></p><p class="c0"><span class="c3">or</span></p><p class="c0 c2"><span></span></p><p class="c0"><span class="c3">&nbsp; &nbsp; brew install curl</span></p><p class="c0 c2"><span></span></p><p class="c0"><span class="c3">Compile :</span></p><p class="c0 c2"><span></span></p><p class="c0"><span class="c3">&nbsp; &nbsp; cd R12-Arm</span></p><p class="c0 c2"><span></span></p><p class="c0"><span class="c3">&nbsp; &nbsp; make</span></p><p class="c0 c2"><span></span></p><p class="c0"><span class="c3">&nbsp; &nbsp; ./arm</span></p><div><p class="c4 c2"><span></span></p></div></body></html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="1348.17">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 16.0px 'Times New Roman'; color: #000000; -webkit-text-stroke: #000000; min-height: 18.0px}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; line-height: 14.0px; font: 15.0px 'Helvetica Neue'; color: #000000; -webkit-text-stroke: #000000}
+    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 15.0px 'Helvetica Neue'; color: #000000; -webkit-text-stroke: #000000}
+    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 15.0px 'Helvetica Neue'; color: #000000; -webkit-text-stroke: #000000; min-height: 17.0px}
+    p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 15.0px 'Helvetica Neue'; color: #000000; -webkit-text-stroke: #000000}
+    p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 14.0px; font: 15.0px 'Helvetica Neue'; color: #000000; -webkit-text-stroke: #000000}
+    p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 14.0px; font: 15.0px 'Helvetica Neue'; color: #000000; -webkit-text-stroke: #000000; min-height: 17.0px}
+    p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 14.0px; font: 24.0px 'Helvetica Neue'; color: #000000; -webkit-text-stroke: #000000}
+    p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 16.0px; font: 16.0px 'Times New Roman'; color: #000000; -webkit-text-stroke: #000000; min-height: 18.0px}
+    span.s1 {font-kerning: none}
+    span.s2 {font: 15.0px 'Helvetica Neue'; font-kerning: none}
+  </style>
+</head>
+<body>
+<p class="p1"><span class="s1"></span><br></p>
+<p class="p2"><span class="s1">AI and Robotics<span class="Apple-converted-space"> </span></span></p>
+<p class="p2"><span class="s1">Project 1</span></p>
+<p class="p3"><span class="s1">Mohammad Mahdi Seyednezhad ,Nima Aghli ,Shakre Elmane,Mengjin Ye <span class="Apple-converted-space"> </span></span></p>
+<p class="p4"><span class="s1"></span><br></p>
+<p class="p4"><span class="s1"></span><br></p>
+<p class="p5"><span class="s1">The goal of project one is to use R12 Robotics arm to inspect and object from front and top side and take pictures of object surface while inspecting it.</span></p>
+<p class="p6"><span class="s1">We have used curl c++ library to be able to send commands while the robot server answers only to http commands.</span></p>
+<p class="p7"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1"></span><br></p>
+<p class="p8"><span class="s1"><b>Functions</b></span><span class="s2"> :</span></p>
+<p class="p6"><span class="s1"><b>captureImage();</b></span></p>
+<p class="p6"><span class="s1">Calling This function will send a image capture command to server in order to take a picture with the camera connect to endpoint of arm.</span></p>
+<p class="p6"><span class="s1">The taken picture will be saved in this link http://debatedecide.fit.edu/robot/last.bmp</span></p>
+<p class="p6"><span class="s1"><b>saveImage(string path_to_images);</b></span></p>
+<p class="p6"><span class="s1">This function downloads the latest image taken by captureImage(); and saves it to the path given by user as a parameter to function.The message will be returned based on if the execution was successful or failed with error message .</span></p>
+<p class="p6"><span class="s1"><b>sendCommand_TMOVETO(int hand,int wrist,int x,int y,int z);</b></span></p>
+<p class="p6"><span class="s1">Calling this function will send a TMOVETO command to arm with the parameters hand as hand position , wrist as wrist position and x,y,z parameters for the robot to move endpoint to desired x,y,z position.</span></p>
+<p class="p6"><span class="s1"><b>sendCommand_HOME();</b></span></p>
+<p class="p6"><span class="s1">This Function will send a command to arm to go its home position.</span></p>
+<p class="p6"><span class="s1"><b>captureSave(std::string path);</b></span></p>
+<p class="p6"><span class="s1">This Function is combination of function capture image and save image with will constantly take picture and save it to the path defined by user as an input parameter to function</span></p>
+<p class="p9"><span class="s1"></span><br></p>
+<p class="p9"><span class="s1"></span><br></p>
+<p class="p6"><span class="s1"><b>Algorithm</b> : There are  2 main loops one for scanning front and one for top side . given correct values as position of object in space the algorithm will start to scan the front side of object from one corner to another corner by taking small steps and while each step it will take a picture and save it to the local machine (this will be used later to process images to find objects).</span></p>
+<p class="p6"><span class="s1">The value of password variable needs to be set so the program can work otherwise the curl lib will return error message.</span></p>
+<p class="p9"><span class="s1"></span><br></p>
+<p class="p9"><span class="s1"></span><br></p>
+<p class="p6"><span class="s1"><b>How to run code :</b></span></p>
+<p class="p6"><span class="s1"> </span></p>
+<p class="p6"><span class="s1">This code needs curl lib to compile :</span></p>
+<p class="p6"><span class="s1">Install curl in ubuntu:</span></p>
+<p class="p9"><span class="s1"></span><br></p>
+<p class="p6"><span class="s1">    sudo apt-get install curl</span></p>
+<p class="p9"><span class="s1"></span><br></p>
+<p class="p6"><span class="s1">Install curl in Mac :</span></p>
+<p class="p9"><span class="s1"></span><br></p>
+<p class="p6"><span class="s1">    sudo apt-get install curl</span></p>
+<p class="p9"><span class="s1"></span><br></p>
+<p class="p6"><span class="s1">or</span></p>
+<p class="p9"><span class="s1"></span><br></p>
+<p class="p6"><span class="s1">    brew install curl</span></p>
+<p class="p9"><span class="s1"></span><br></p>
+<p class="p6"><span class="s1">Compile :</span></p>
+<p class="p9"><span class="s1"></span><br></p>
+<p class="p6"><span class="s1">    cd R12-Arm</span></p>
+<p class="p9"><span class="s1"></span><br></p>
+<p class="p6"><span class="s1">    make</span></p>
+<p class="p9"><span class="s1"></span><br></p>
+<p class="p6"><span class="s1">    ./arm</span></p>
+<p class="p1"><span class="s1"></span><br></p>
+</body>
+</html>

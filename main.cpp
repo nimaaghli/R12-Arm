@@ -14,13 +14,26 @@
 using namespace std;
 
 int main(int argc, const char * argv[]) {
-    password="NAhuygi6djgovuyv";
+    //string path_do_images="/Users/nimaaghli/Documents/Couraea/AI and Robotics/project1_AIClass/project1_AIClass/img/";
+    //password="NAhuygi6djgovuyv";
     //password="ESjdvkasfalkgd";//SHAKERI
-    //password="SMkgbku6tc4hxwy";
-    string path_do_images="/Users/nimaaghli/Documents/Couraea/AI and Robotics/project1_AIClass/project1_AIClass/img/";
+    //password="SMkgbku6tc4hxwy";//Mahdi
+   
+    if(argc<3){
+        printf("Not enough Parameters\n");
+        printf("Template ./arm <password> <path to images to save>\n");
+        return 0;
+        
+    }
+    else {
+        password=argv[1];
+        path_do_images=argv[2];
+    }
+    
+   
     bool flag=true;
     int fix;
-    vector<double> numbers={-4100,-4100,-4600};
+    vector<int> numbers={-4100,-4100,-4600};
     
     //vector<float> res=inverse_kinemetics(-2400,-1600,1000, 2500, 2230);
     //<HAND_ANGLE> <WRIST_ANGLE> <ELBOW_ANGLE> <SHOULDER_ANGLE> <WAIST_ANGLE>
@@ -62,8 +75,8 @@ int main(int argc, const char * argv[]) {
     sendCommand_TMOVETO(3000,-5950, -2500, -1600, 100);//GO TO BASE
     flag=true;
     fix=0;
-    for(vector<double>::iterator it=numbers.begin();it!=numbers.end();it++){
-        printf("+++i=%f\n",*it);
+    for(vector<int>::iterator it=numbers.begin();it!=numbers.end();it++){
+        printf("+++i=%d\n",*it);
         fix=*it;
         if(flag){
             for(int j=-200;j>=-1300;j-=100){

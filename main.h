@@ -20,6 +20,7 @@ void sendcommand_AJMA(int hand,int wrist,int elbow,int shoulder,int waist);
 std::vector<float> inverse_kinemetics(int x,int y,int z,int l,int a);
 std::string password;
 struct tmove;
+std::string path_do_images;
 
 
 #endif /* main_h */
