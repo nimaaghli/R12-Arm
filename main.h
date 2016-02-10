@@ -16,6 +16,8 @@ void sendCommand_HOME();
 void captureSave(std::string path);
 int  wrist,hand;
 int  image_seq;
+void sendcommand_AJMA(int hand,int wrist,int elbow,int shoulder,int waist);
+std::vector<float> inverse_kinemetics(int x,int y,int z,int l,int a);
 std::string password;
 struct tmove;
 

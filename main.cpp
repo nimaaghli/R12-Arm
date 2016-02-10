@@ -10,44 +10,49 @@
 #include <curl/curl.h>
 #include <vector>
 #include "main.h"
+#include <cmath>
 using namespace std;
 
 int main(int argc, const char * argv[]) {
-    //password="NAhuygi6djgovuyv";
-    password="ESjdvkasfalkgd";//SHAKERI
+    password="NAhuygi6djgovuyv";
+    //password="ESjdvkasfalkgd";//SHAKERI
     //password="SMkgbku6tc4hxwy";
     string path_do_images="/Users/nimaaghli/Documents/Couraea/AI and Robotics/project1_AIClass/project1_AIClass/img/";
     bool flag=true;
     int fix;
-    vector<double> numbers={-4200,-4200,-4600};
+    vector<double> numbers={-4100,-4100,-4600};
     
+    //vector<float> res=inverse_kinemetics(-2400,-1600,1000, 2500, 2230);
+    //<HAND_ANGLE> <WRIST_ANGLE> <ELBOW_ANGLE> <SHOULDER_ANGLE> <WAIST_ANGLE>
+    //printf("q1=%d,q2=%d,q3=%d",res.at(0)*100,res.at(1)*100,res.at(2)*100);
+    //sendcommand_AJMA(-11500,-7000,res.at(0)*10,res.at(1)*10,res.at(2)*10);
     //saveImage(path_do_images);
     //captureImage();
     //captureSave(path_do_images);
-    sendCommand_HOME();
-    //sendCommand_TMOVETO(3000,-5950, -2400, -1600, 100);
+    //sendCommand_HOME();
+    sendCommand_TMOVETO(3000,-5950, -2000, -1600, 100);
     for(int i=-1831;i<=-1031;i+=200){
         printf("+++i=%d\n",i);
         if(flag){
-            fix=-2620;
-                for(int j=-280;j>=-1100;j-=100){
+            fix=-2520;
+                for(int j=-180;j>=-1000;j-=100){
                     //sendCommand_TMOVETO(3000,-1050, -2952, -280, -1831);
                     printf("j=%d,fix=%d",j,fix);
                     flag=false;
                     sendCommand_TMOVETO(3000,-1850, fix, j, i);//-2620
-                    //captureSave(path_do_images);
+                    captureSave(path_do_images);
                     fix+=18;
             }
         }
         
         else {
-            fix=-2476;
-            for(int j=-1100;j<=-280;j+=100){
+            fix=-2376;
+            for(int j=-1000;j<=-180;j+=100){
                 //sendCommand_TMOVETO(3000,-1050, -2952, -280, -1831);
                 printf("j=%d",j);
                 flag=true;
                 sendCommand_TMOVETO(3000,-1850, fix, j, i);
-                //captureSave(path_do_images);
+                captureSave(path_do_images);
                 fix-=18;
                 }
         }
@@ -61,7 +66,7 @@ int main(int argc, const char * argv[]) {
         printf("+++i=%f\n",*it);
         fix=*it;
         if(flag){
-            for(int j=-300;j>=-1400;j-=100){
+            for(int j=-200;j>=-1300;j-=100){
                 flag=false;
                 printf("j=%d,fix=%d\n",j,fix);
                 sendCommand_TMOVETO(3000,-8600, fix, j, 0);
@@ -71,7 +76,7 @@ int main(int argc, const char * argv[]) {
         }
         
         else {
-            for(int j=-1400;j<=-300;j+=100){
+            for(int j=-1300;j<=-200;j+=100){
                 
                 flag=true;
                 sendCommand_TMOVETO(3000,-8600, fix, j, 0);
@@ -83,35 +88,8 @@ int main(int argc, const char * argv[]) {
         
         printf("\n");
     }
-   /*
-    sendCommand_TMOVETO(3000,-1050, -2952, -280, -1831);
-    sendCommand_TMOVETO(3000,-1050, -2952, -1100, -1831);
-    sendCommand_TMOVETO(3000,-1050, -2852, -1100, -1631);
-    sendCommand_TMOVETO(3000,-1050, -2922, -280, -1631);
-    sendCommand_TMOVETO(3000,-1050, -2922, -280, -1441);
-    sendCommand_TMOVETO(3000,-1050, -2852, -1100, -1431);
-    sendCommand_TMOVETO(3000,-1050, -2852, -1100, -1231);
-    sendCommand_TMOVETO(3000,-1050, -2922, -280, -1241);
-    sendCommand_TMOVETO(3000,-1050, -2922, -280, -1041);
-    sendCommand_TMOVETO(3000,-1050, -2852, -1100, -1031);
-    
-    
-    
-    sendCommand_TMOVETO(3000,-5950, -2752, -1600, 100);
-    */
- 
-    
-    /*sendCommand_TMOVETO(3000,-8500, -4400, -300, 0);
-    sendCommand_TMOVETO(3000,-8500, -4200, -1400, 0);
-    sendCommand_TMOVETO(3000,-8500, -4400, -1400, 0);
-    sendCommand_TMOVETO(3000,-8500, -4600, -300, 0);
-    sendCommand_TMOVETO(3000,-8500, -4800, -300, 0);
-    sendCommand_TMOVETO(3000,-8500, -4700, -1400, 0);
-    */
-    
-    
-    //sendCommand_TMOVETO(3000,-5950, -2752, -1600, 100);
-    //sendCommand_HOME();
+
+    sendCommand_HOME();
    
     
     return 0;
@@ -250,5 +228,57 @@ void captureSave(string path){
     
 }
 
+void sendcommand_AJMA(int hand,int wrist,int elbow,int shoulder,int waist){
+    CURL *curl;
+    CURLcode res;
+    string command;
+    command ="p="+password+"&c="+to_string(hand)+" "+to_string(wrist)+" "+to_string(elbow)+" "+to_string(shoulder)+" "+to_string(waist)+" "+"AJMA";
+    /* In windows, this will init the winsock stuff */
+    curl_global_init(CURL_GLOBAL_ALL);
+    printf("comamnd is = %s\n",command.c_str());    /* get a curl handle */
+    curl = curl_easy_init();
+    if(curl) {
+        /* First set the URL that is about to receive our POST. This URL can
+         just as well be a https:// URL if that is what should receive the
+         data. */
+        curl_easy_setopt(curl, CURLOPT_URL, "http://debatedecide.fit.edu/robot.php?o=369");
+        /* Now specify the POST data */
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, command.c_str());
+        
+        /* Perform the request, res will get the return code */
+        res = curl_easy_perform(curl);
+        /* Check for errors */
+        if(res != CURLE_OK)
+            fprintf(stderr, "curl_easy_perform() failed: %s\n",
+                    curl_easy_strerror(res));
+        
+        /* always cleanup */
+        curl_easy_cleanup(curl);
+    }
+    curl_global_cleanup();
+}
+
+vector<float> inverse_kinemetics(int x,int y,int z,int l,int a){ // THIS FUNCTION WILL BE USED ON LATER PROJECT
+    
+    vector<float> res;
+    double d;
+    float p=3.14159265;
+    d=sqrt(x^2+y^2+((a+z)^2));
+    float q1,q2,q3=0;
+    float q22=acos(float(z)/float(d))*180/p;
+    printf("q22 =%f d=%f\n",q22,d);
+    q2=acos(((float(d)/2)/float(l)))*180/p;
+    printf("q2 =%f\n",q2);
+    q1=180-(2*q2);
+    printf("q1 =%f\n",q1);
+    q3=atan(float(x)/float(y))*180/p;
+    printf("q3 =%f\n",q3);
+    
+    res.push_back(q1);
+    res.push_back(q2);
+    res.push_back(q3);
+    return res;
+    
+}
 
 
