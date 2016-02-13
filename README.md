@@ -21,5 +21,5 @@ R12 Robotic Arm C++ interface
   
   >make
   
-  >./arm
+  >./arm <password> <path to save images>
   
