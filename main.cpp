@@ -6,11 +6,25 @@
 //  Copyright © 2016 Nima Aghli. All rights reserved.
 //  This app uses curl lib to send http commands
 
+/*This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
+
 #include <iostream>
 #include <curl/curl.h>
 #include <vector>
 #include "main.h"
 #include <cmath>
+#include <ctime>
 
 #include "opencv2/core/core.hpp"
 #include "opencv2/features2d/features2d.hpp"
@@ -40,13 +54,15 @@ int main(int argc, const char * argv[]) {
     else {
         password=argv[1];
         path_do_images=argv[2];
+        path_to_model=argv[3];
     }
+    printf("%s",path_to_model.c_str());
     //sendCommand_TMOVETO(3000,-7950, -3900, 0, 2000);
     //captureImage();
     //saveImage(path_do_images);
     //project1(path_do_images, password);
-    Mat model=imread(path_do_images+"model.png");
-    Mat image=imread(path_do_images+"image8.BMP");
+    Mat model=imread(path_to_model);
+    Mat image=imread(path_do_images);
     processimage(model, image);
     return 0;
 }
@@ -336,8 +352,11 @@ if( !img_object.data || !img_scene.data )
     
     //-- Show detected matches
     imshow( "Good Matches & Object detection", img_matches );
+    time_t now = time(0);
     
-    imwrite( path_do_images+ "Gray_Image.jpg", img_matches );
+    // convert now to string form
+    char* dt = ctime(&now);
+    imwrite( path_do_images+ "output"+dt+".jpg", img_matches );
     
     waitKey(0);
     return corners;

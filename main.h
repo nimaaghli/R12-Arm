@@ -29,6 +29,7 @@ void project1(std::string path_do_images,std::string password);
 std::string password;
 struct tmove;
 std::string path_do_images;
+std::string path_to_model;
 
 
 #endif /* main_h */
