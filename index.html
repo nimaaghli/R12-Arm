@@ -7,70 +7,84 @@
   <meta name="Generator" content="Cocoa HTML Writer">
   <meta name="CocoaVersion" content="1348.17">
   <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 16.0px 'Times New Roman'; color: #000000; -webkit-text-stroke: #000000; min-height: 18.0px}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; line-height: 14.0px; font: 15.0px 'Helvetica Neue'; color: #000000; -webkit-text-stroke: #000000}
-    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 15.0px 'Helvetica Neue'; color: #000000; -webkit-text-stroke: #000000}
-    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 15.0px 'Helvetica Neue'; color: #000000; -webkit-text-stroke: #000000; min-height: 17.0px}
-    p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 15.0px 'Helvetica Neue'; color: #000000; -webkit-text-stroke: #000000}
-    p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 14.0px; font: 15.0px 'Helvetica Neue'; color: #000000; -webkit-text-stroke: #000000}
-    p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 14.0px; font: 15.0px 'Helvetica Neue'; color: #000000; -webkit-text-stroke: #000000; min-height: 17.0px}
-    p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 14.0px; font: 24.0px 'Helvetica Neue'; color: #000000; -webkit-text-stroke: #000000}
-    p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 16.0px; font: 16.0px 'Times New Roman'; color: #000000; -webkit-text-stroke: #000000; min-height: 18.0px}
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 16.0px 'Times New Roman'; color: #000000; -webkit-text-stroke: #000000}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 15.0px 'Helvetica Neue'; color: #000000; -webkit-text-stroke: #000000}
+    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 15.0px 'Helvetica Neue'; color: #000000; -webkit-text-stroke: #000000}
+    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 24.0px 'Helvetica Neue'; color: #000000; -webkit-text-stroke: #000000}
     span.s1 {font-kerning: none}
     span.s2 {font: 15.0px 'Helvetica Neue'; font-kerning: none}
   </style>
 </head>
 <body>
-<p class="p1"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><br>
+</span></p>
 <p class="p2"><span class="s1">AI and Robotics<span class="Apple-converted-space"> </span></span></p>
 <p class="p2"><span class="s1">Project 1</span></p>
-<p class="p3"><span class="s1">Mohammad Mahdi Seyednezhad ,Nima Aghli ,Shakre Elmane,Mengjin Ye <span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s1"></span><br></p>
-<p class="p4"><span class="s1"></span><br></p>
-<p class="p5"><span class="s1">The goal of project one is to use R12 Robotics arm to inspect and object from front and top side and take pictures of object surface while inspecting it.</span></p>
-<p class="p6"><span class="s1">We have used curl c++ library to be able to send commands while the robot server answers only to http commands.</span></p>
-<p class="p7"><span class="s1"></span><br></p>
-<p class="p7"><span class="s1"></span><br></p>
-<p class="p8"><span class="s1"><b>Functions</b></span><span class="s2"> :</span></p>
-<p class="p6"><span class="s1"><b>captureImage();</b></span></p>
-<p class="p6"><span class="s1">Calling This function will send a image capture command to server in order to take a picture with the camera connect to endpoint of arm.</span></p>
-<p class="p6"><span class="s1">The taken picture will be saved in this link http://debatedecide.fit.edu/robot/last.bmp</span></p>
-<p class="p6"><span class="s1"><b>saveImage(string path_to_images);</b></span></p>
-<p class="p6"><span class="s1">This function downloads the latest image taken by captureImage(); and saves it to the path given by user as a parameter to function.The message will be returned based on if the execution was successful or failed with error message .</span></p>
-<p class="p6"><span class="s1"><b>sendCommand_TMOVETO(int hand,int wrist,int x,int y,int z);</b></span></p>
-<p class="p6"><span class="s1">Calling this function will send a TMOVETO command to arm with the parameters hand as hand position , wrist as wrist position and x,y,z parameters for the robot to move endpoint to desired x,y,z position.</span></p>
-<p class="p6"><span class="s1"><b>sendCommand_HOME();</b></span></p>
-<p class="p6"><span class="s1">This Function will send a command to arm to go its home position.</span></p>
-<p class="p6"><span class="s1"><b>captureSave(std::string path);</b></span></p>
-<p class="p6"><span class="s1">This Function is combination of function capture image and save image with will constantly take picture and save it to the path defined by user as an input parameter to function</span></p>
-<p class="p9"><span class="s1"></span><br></p>
-<p class="p9"><span class="s1"></span><br></p>
-<p class="p6"><span class="s1"><b>Algorithm</b> : There are  2 main loops one for scanning front and one for top side . given correct values as position of object in space the algorithm will start to scan the front side of object from one corner to another corner by taking small steps and while each step it will take a picture and save it to the local machine (this will be used later to process images to find objects).</span></p>
-<p class="p6"><span class="s1">The value of password variable needs to be set so the program can work otherwise the curl lib will return error message.</span></p>
-<p class="p9"><span class="s1"></span><br></p>
-<p class="p9"><span class="s1"></span><br></p>
-<p class="p6"><span class="s1"><b>How to run code :</b></span></p>
-<p class="p6"><span class="s1"> </span></p>
-<p class="p6"><span class="s1">This code needs curl lib to compile :</span></p>
-<p class="p6"><span class="s1">Install curl in ubuntu:</span></p>
-<p class="p9"><span class="s1"></span><br></p>
-<p class="p6"><span class="s1">    sudo apt-get install curl</span></p>
-<p class="p9"><span class="s1"></span><br></p>
-<p class="p6"><span class="s1">Install curl in Mac :</span></p>
-<p class="p9"><span class="s1"></span><br></p>
-<p class="p6"><span class="s1">    sudo apt-get install curl</span></p>
-<p class="p9"><span class="s1"></span><br></p>
-<p class="p6"><span class="s1">or</span></p>
-<p class="p9"><span class="s1"></span><br></p>
-<p class="p6"><span class="s1">    brew install curl</span></p>
-<p class="p9"><span class="s1"></span><br></p>
-<p class="p6"><span class="s1">Compile :</span></p>
-<p class="p9"><span class="s1"></span><br></p>
-<p class="p6"><span class="s1">    cd R12-Arm</span></p>
-<p class="p9"><span class="s1"></span><br></p>
-<p class="p6"><span class="s1">    make</span></p>
-<p class="p9"><span class="s1"></span><br></p>
-<p class="p6"><span class="s1">    ./arm</span></p>
-<p class="p1"><span class="s1"></span><br></p>
+<p class="p2"><span class="s1">Mohammad Mahdi Seyednezhad ,Nima Aghli ,Shakre Elmane,Mengjin Ye <span class="Apple-converted-space"> </span></span></p>
+<p class="p2"><span class="s1"><br>
+</span></p>
+<p class="p2"><span class="s1"><br>
+</span></p>
+<p class="p3"><span class="s1">The goal of project one is to use R12 Robotics arm to inspect and object from front and top side and take pictures of object surface while inspecting it.</span></p>
+<p class="p3"><span class="s1">We have used curl c++ library to be able to send commands while the robot server answers only to http commands.</span></p>
+<p class="p3"><span class="s1"><br>
+</span></p>
+<p class="p3"><span class="s1"><br>
+</span></p>
+<p class="p4"><span class="s1"><b>Functions</b></span><span class="s2"> :</span></p>
+<p class="p3"><span class="s1"><b>captureImage();</b></span></p>
+<p class="p3"><span class="s1">Calling This function will send a image capture command to server in order to take a picture with the camera connect to endpoint of arm.</span></p>
+<p class="p3"><span class="s1">The taken picture will be saved in this link http://debatedecide.fit.edu/robot/last.bmp</span></p>
+<p class="p3"><span class="s1"><b>saveImage(string path_to_images);</b></span></p>
+<p class="p3"><span class="s1">This function downloads the latest image taken by captureImage(); and saves it to the path given by user as a parameter to function.The message will be returned based on if the execution was successful or failed with error message .</span></p>
+<p class="p3"><span class="s1"><b>sendCommand_TMOVETO(int hand,int wrist,int x,int y,int z);</b></span></p>
+<p class="p3"><span class="s1">Calling this function will send a TMOVETO command to arm with the parameters hand as hand position , wrist as wrist position and x,y,z parameters for the robot to move endpoint to desired x,y,z position.</span></p>
+<p class="p3"><span class="s1"><b>sendCommand_HOME();</b></span></p>
+<p class="p3"><span class="s1">This Function will send a command to arm to go its home position.</span></p>
+<p class="p3"><span class="s1"><b>captureSave(std::string path);</b></span></p>
+<p class="p3"><span class="s1">This Function is combination of function capture image and save image with will constantly take picture and save it to the path defined by user as an input parameter to function</span></p>
+<p class="p1"><span class="s1"><br>
+</span></p>
+<p class="p1"><span class="s1"><br>
+</span></p>
+<p class="p3"><span class="s1"><b>Algorithm</b> : There are  2 main loops one for scanning front and one for top side . given correct values as position of object in space the algorithm will start to scan the front side of object from one corner to another corner by taking small steps and while each step it will take a picture and save it to the local machine (this will be used later to process images to find objects).</span></p>
+<p class="p3"><span class="s1">The value of password variable needs to be set so the program can work otherwise the curl lib will return error message.</span></p>
+<p class="p1"><span class="s1"><br>
+</span></p>
+<p class="p1"><span class="s1"><br>
+</span></p>
+<p class="p3"><span class="s1"><b>How to run code :</b></span></p>
+<p class="p3"><span class="s1"> </span></p>
+<p class="p3"><span class="s1">This code needs curl lib to compile :</span></p>
+<p class="p3"><span class="s1">Install curl in ubuntu:</span></p>
+<p class="p1"><span class="s1"><br>
+</span></p>
+<p class="p3"><span class="s1">    sudo apt-get install curl</span></p>
+<p class="p1"><span class="s1"><br>
+</span></p>
+<p class="p3"><span class="s1">Install curl in Mac :</span></p>
+<p class="p1"><span class="s1"><br>
+</span></p>
+<p class="p3"><span class="s1">    sudo apt-get install curl</span></p>
+<p class="p1"><span class="s1"><br>
+</span></p>
+<p class="p3"><span class="s1">or</span></p>
+<p class="p1"><span class="s1"><br>
+</span></p>
+<p class="p3"><span class="s1">    brew install curl</span></p>
+<p class="p1"><span class="s1"><br>
+</span></p>
+<p class="p3"><span class="s1">Compile :</span></p>
+<p class="p1"><span class="s1"><br>
+</span></p>
+<p class="p3"><span class="s1">    cd R12-Arm</span></p>
+<p class="p1"><span class="s1"><br>
+</span></p>
+<p class="p3"><span class="s1">    make</span></p>
+<p class="p1"><span class="s1"><br>
+</span></p>
+<p class="p3"><span class="s1">    ./arm &lt;password&gt; &lt;path to save images&gt;</span></p>
+<p class="p1"><span class="s1"><br>
+</span></p>
 </body>
 </html>
