@@ -39,7 +39,7 @@ using namespace cv;
 
 int main(int argc, const char * argv[]) {
     string path_do_images="/Users/nimaaghli/Documents/Couraea/AiRobotics/project1_AIClass/project1_AIClass/img/";
-    password="NAhuygi6djgovuyv";
+    //password="NAhuygi6djgovuyv";
     //password="ESjdvkasfalkgd";//SHAKERI
     //password="SMkgbku6tc4hxwy";//Mahdi
     
@@ -57,13 +57,16 @@ int main(int argc, const char * argv[]) {
         path_to_model=argv[3];
     }
     printf("%s",path_to_model.c_str());
-    //sendCommand_TMOVETO(3000,-7950, -3900, 0, 2000);
+    sendCommand_TMOVETO(3000,-5950, -2500, -1600, 100);//GO TO BASE
+    sendCommand_HOME();
+    sendCommand_TMOVETO(3000,-7950, -3900, 0, 2000);
     //captureImage();
     //saveImage(path_do_images);
     //project1(path_do_images, password);
-    Mat model=imread(path_to_model);
-    Mat image=imread(path_do_images);
-    processimage(model, image);
+    //Mat model=imread(path_to_model);
+    //Mat image=imread(path_do_images);
+    
+    //processimage(model, image);
     return 0;
 }
 
@@ -448,5 +451,44 @@ void project1(string path_do_images,string password){
     
 }
 
+void invKinem(){
+    
+    double r = 3500;
+    double z = 3000;
+    long angleStep = 3000;
+    
+    double r2 = sqrt(r*r + z*z);
+    
+    double t4 = M_PI / 2;
+    double t3 = asin( z / r2 );
+    double t5 = asin( r / r2 );
+    double t6 = acos( r2 / 5000.0 );
+    double t8 = t6;
+    double t1 = ( M_PI / 2 ) - ( t6 + t3);
+    double t7 = ( M_PI ) - ( t6 + t8);
+    double t2 = ( M_PI ) - t7;
+    double t9 = ( M_PI ) - ( t5 + t8);
+    
+    long elbow    = (radian_to_degree( t2 ) * 100);
+    long shoulder = (radian_to_degree( t1 ) * 100);
+    long wrist    = (radian_to_degree( t9 ) * 100 - 1300);
+    
+    printf("wrist=%ld,elbow=%ld,shoulder=%ld",wrist,elbow,shoulder);
+    for (long waist = -18000; waist <18000; waist += angleStep) {
+        // <HAND_ANGLE> <WRIST_ANGLE> <ELBOW_ANGLE> <SHOULDER_ANGLE> <WAIST_ANGLE> AJMA
+        
+        sendcommand_AJMA(3000,wrist,elbow,shoulder,waist);
+
+        
+      
+    }
+    
+    
+}
 
 
+double radian_to_degree(double  ENTER) {
+    double Pi = M_PI;
+    float degrees = (ENTER * 180) / Pi;
+    return degrees;
+}
