@@ -476,7 +476,6 @@ void invKinem(){
     printf("wrist=%ld,elbow=%ld,shoulder=%ld",wrist,elbow,shoulder);
     for (long waist = -18000; waist <18000; waist += angleStep) {
         // <HAND_ANGLE> <WRIST_ANGLE> <ELBOW_ANGLE> <SHOULDER_ANGLE> <WAIST_ANGLE> AJMA
-        
         sendcommand_AJMA(3000,wrist,elbow,shoulder,waist);
 
         
