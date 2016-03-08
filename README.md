@@ -14,7 +14,7 @@ R12 Robotic Arm C++ interface
   or
   
   >brew install curl
-  
+##OpenCV 2.4.11 is needed to compile branch project 2  
   
 #Compile : 
   >cd R12-Arm 
