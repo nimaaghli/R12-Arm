@@ -40,10 +40,10 @@ using namespace cv;
 int main(int argc, const char * argv[]) {
     string path_do_images="/Users/nimaaghli/Documents/Couraea/AiRobotics/project1_AIClass/project1_AIClass/img/";
     //password="NAhuygi6djgovuyv";
-    //password="ESjdvkasfalkgd";//SHAKERI
+    password="ESjdvkasfalkgd";//SHAKERI
     //password="SMkgbku6tc4hxwy";//Mahdi
     
-    password="YMBkbo3yb3b3b3p";
+    //password="YMBkbo3yb3b3b3p";
     
     if(argc<3){
         printf("Not enough Parameters\n");
@@ -57,16 +57,31 @@ int main(int argc, const char * argv[]) {
         path_to_model=argv[3];
     }
     printf("%s",path_to_model.c_str());
-    sendCommand_TMOVETO(3000,-5950, -2500, -1600, 100);//GO TO BASE
-    sendCommand_HOME();
-    sendCommand_TMOVETO(3000,-7950, -3900, 0, 2000);
+    //sendCommand_HOME();
+    //invKinem();
     //captureImage();
     //saveImage(path_do_images);
     //project1(path_do_images, password);
-    //Mat model=imread(path_to_model);
-    //Mat image=imread(path_do_images);
+    //sendCommand_TMOVETO(3000,-7950, -2500, -1600, 2000);//GO TO BASE
     
-    //processimage(model, image);
+    vector<cv::Point> res;
+    Mat model=imread(path_to_model);
+    Mat image=imread(path_do_images);
+    res=processimage(model, image);
+    double l1 = cv::norm(res.at(0)-res.at(1));
+    double l2 = cv::norm(res.at(0)-res.at(2));
+    double diag=sqrt(pow(l1,2)+pow(l2,2));
+    printf("diag = %f \n",diag);
+    if(diag<200){
+        printf("Image Not FOUND\n");
+    }
+    else {
+        printf("P1 = %d and %d\n",res[0].x ,res[0].y);
+        printf("P2 = %d and %d\n",res[1].x ,res[1].y);
+        printf("P3 = %d and %d\n",res[2].x ,res[2].y);
+        printf("P4 = %d and %d\n",res[3].x ,res[3].y);
+    }
+    
     return 0;
 }
 
@@ -109,7 +124,7 @@ void saveImage(string path){
     image_seq +=1;
     image = curl_easy_init();
     
-    string image_name="image";
+    string image_name="IMAGE_";
     image_name =path+image_name+to_string(image_seq)+".BMP";
     printf("%s",image_name.c_str());
     fp = fopen(image_name.c_str(), "wp");
@@ -257,7 +272,7 @@ vector<float> inverse_kinemetics(int x,int y,int z,int l,int a){ // THIS FUNCTIO
 }
 
 vector<cv::Point> processimage(cv::Mat img1,cv::Mat img2){
-    vector<cv::Point> corners;
+    
     Mat img_object;
     Mat img_scene;
     cv::cvtColor(img1, img_object, CV_BGR2GRAY);
@@ -267,10 +282,10 @@ if( !img_object.data || !img_scene.data )
 { std::cout<< " --(!) Error reading images " << std::endl; }
     
     //-- Step 1: Detect the keypoints using SURF Detector
-    int minHessian = 400;
+    int minHessian = 200;
     
     SurfFeatureDetector detector( minHessian );
-    
+
     std::vector<KeyPoint> keypoints_object, keypoints_scene;
     
     detector.detect( img_object, keypoints_object );
@@ -278,7 +293,7 @@ if( !img_object.data || !img_scene.data )
     
     //-- Step 2: Calculate descriptors (feature vectors)
     SurfDescriptorExtractor extractor;
-    
+    //SiftDescriptorExtractor extractor;
     Mat descriptors_object, descriptors_scene;
     
     extractor.compute( img_object, keypoints_object, descriptors_object );
@@ -310,9 +325,10 @@ if( !img_object.data || !img_scene.data )
     }
     
     Mat img_matches;
-    drawMatches( img_object, keypoints_object, img_scene, keypoints_scene,
+    img_matches =img2;
+   /* drawMatches( img_object, keypoints_object, img_scene, keypoints_scene,
                 good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
-                vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
+                vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );*/
     
     
     //-- Localize the object from img_1 in img_2
@@ -326,15 +342,24 @@ if( !img_object.data || !img_scene.data )
         scene.push_back( keypoints_scene[ good_matches[i].trainIdx ].pt );
     }
     
-    Mat H = findHomography( obj, scene, CV_RANSAC );
+    Mat H = findHomography( obj, scene, CV_RANSAC  );
+    
+    
+    
     //-- Get the corners from the image_1 ( the object to be "detected" )
     std::vector<Point2f> obj_corners(4);
     obj_corners[0] = Point(0,0); obj_corners[1] = Point( img_object.cols, 0 );
     obj_corners[2] = Point( img_object.cols, img_object.rows ); obj_corners[3] = Point( 0, img_object.rows );
     std::vector<Point2f> scene_corners(4);
-    
+
     perspectiveTransform( obj_corners, scene_corners, H);
-    
+    Mat H1;
+    H1 =getPerspectiveTransform(obj_corners, scene_corners);
+    printf("row =%d,%d\n",H.rows,H.cols);
+    printf("row =%f,%f,%f\n",H1.at<double>(cv::Point(0,0)),H1.at<double>(cv::Point(0,1)),H1.at<double>(cv::Point(0,2)));
+    printf("row =%f,%f,%f\n",H1.at<double>(cv::Point(1,0)),H1.at<double>(cv::Point(1,1)),H1.at<double>(cv::Point(1,2)));
+    printf("row =%f,%f,%f\n",H1.at<double>(cv::Point(2,0)),H1.at<double>(cv::Point(2,1)),H1.at<double>(cv::Point(2,2)));
+
     
     //-- Draw lines between the corners (the mapped object in the scene - image_2 )
     Point2f offset( (float)img_object.cols, 0);
@@ -347,11 +372,15 @@ if( !img_object.data || !img_scene.data )
     printf("valuse is = %f and %f\n",scene_corners[1].x ,scene_corners[1].y);
     printf("valuse is = %f and %f\n",scene_corners[2].x ,scene_corners[2].y);
     printf("valuse is = %f and %f\n",scene_corners[3].x ,scene_corners[3].y);
-    
-    line( img_matches, scene_corners[0] + offset, scene_corners[1] + offset, Scalar(255, 255, 0), 4 );
-    line( img_matches, scene_corners[1] + offset, scene_corners[2] + offset, Scalar( 0, 255, 0), 4 );
-    line( img_matches, scene_corners[2] + offset, scene_corners[3] + offset, Scalar( 0, 255, 0), 4 );
-    line( img_matches, scene_corners[3] + offset, scene_corners[0] + offset, Scalar( 0, 255, 0), 4 );
+    cv::Point p1=cv::Point(scene_corners[0].x ,scene_corners[0].y);
+    cv::Point p2=cv::Point(scene_corners[1].x ,scene_corners[1].y);
+    cv::Point p3=cv::Point(scene_corners[2].x ,scene_corners[2].y);
+    cv::Point p4=cv::Point(scene_corners[3].x ,scene_corners[3].y);
+    vector<cv::Point> corners={p1,p2,p3,p4};
+    line( img_matches, scene_corners[0] , scene_corners[1] , Scalar(255, 255, 0), 4 );
+    line( img_matches, scene_corners[1] , scene_corners[2] , Scalar( 0, 255, 0), 4 );
+    line( img_matches, scene_corners[2] , scene_corners[3] , Scalar( 0, 255, 0), 4 );
+    line( img_matches, scene_corners[3] , scene_corners[0] , Scalar( 0, 255, 0), 4 );
     
     //-- Show detected matches
     imshow( "Good Matches & Object detection", img_matches );
@@ -360,8 +389,8 @@ if( !img_object.data || !img_scene.data )
     // convert now to string form
     char* dt = ctime(&now);
     imwrite( path_do_images+ "output"+dt+".jpg", img_matches );
-    
-    waitKey(0);
+    usleep(4000000 );
+    //waitKey(0);
     return corners;
     
 }
@@ -452,14 +481,13 @@ void project1(string path_do_images,string password){
 }
 
 void invKinem(){
+    string path_do_images="/Users/nimaaghli/Documents/Couraea/AiRobotics/project1_AIClass/project1_AIClass/img/";
     
     double r = 3500;
     double z = 3000;
-    long angleStep = 3000;
+    long angleStep = 3500;
     
     double r2 = sqrt(r*r + z*z);
-    
-    double t4 = M_PI / 2;
     double t3 = asin( z / r2 );
     double t5 = asin( r / r2 );
     double t6 = acos( r2 / 5000.0 );
@@ -474,16 +502,23 @@ void invKinem(){
     long wrist    = (radian_to_degree( t9 ) * 100 - 1300);
     
     printf("wrist=%ld,elbow=%ld,shoulder=%ld",wrist,elbow,shoulder);
-    for (long waist = -18000; waist <18000; waist += angleStep) {
+    //for (long waist = -18000; waist <0; waist += angleStep) {
         // <HAND_ANGLE> <WRIST_ANGLE> <ELBOW_ANGLE> <SHOULDER_ANGLE> <WAIST_ANGLE> AJMA
-        sendcommand_AJMA(3000,wrist,elbow,shoulder,waist);
-
-        
-      
+       // sendcommand_AJMA(4500,wrist,elbow,shoulder,waist);
+       // captureImage();
+       // saveImage(path_do_images);
+   // }
+    for (long waist = -18000; waist <0; waist += angleStep) {
+        // <HAND_ANGLE> <WRIST_ANGLE> <ELBOW_ANGLE> <SHOULDER_ANGLE> <WAIST_ANGLE> AJMA
+        sendcommand_AJMA(4500,wrist,-elbow,-shoulder,waist);
+        captureImage();
+        saveImage(path_do_images);
     }
     
     
 }
+
+
 
 
 double radian_to_degree(double  ENTER) {
