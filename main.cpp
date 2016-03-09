@@ -35,13 +35,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
 using namespace std;
 using namespace cv;
-
+std::string path_do_images;
+std::string path_to_model;
 
 int main(int argc, const char * argv[]) {
     string path_do_images="/Users/nimaaghli/Documents/Couraea/AiRobotics/project1_AIClass/project1_AIClass/img/";
     //password="NAhuygi6djgovuyv";
-    password="ESjdvkasfalkgd";//SHAKERI
-    //password="SMkgbku6tc4hxwy";//Mahdi
+    //password="ESjdvkasfalkgd";//SHAKERI
+    password="SMkgbku6tc4hxwy";//Mahdi
     
     //password="YMBkbo3yb3b3b3p";
     
@@ -57,22 +58,25 @@ int main(int argc, const char * argv[]) {
         path_to_model=argv[3];
     }
     printf("%s",path_to_model.c_str());
+    //saveImage(path_do_images);
     //sendCommand_HOME();
-    //invKinem();
+    invKinem();
     //captureImage();
     //saveImage(path_do_images);
+    
     //project1(path_do_images, password);
     //sendCommand_TMOVETO(3000,-7950, -2500, -1600, 2000);//GO TO BASE
+   
     
-    vector<cv::Point> res;
-    Mat model=imread(path_to_model);
+    /*Mat model=imread(path_to_model);
     Mat image=imread(path_do_images);
+    vector<cv::Point> res;
     res=processimage(model, image);
     double l1 = cv::norm(res.at(0)-res.at(1));
     double l2 = cv::norm(res.at(0)-res.at(2));
     double diag=sqrt(pow(l1,2)+pow(l2,2));
     printf("diag = %f \n",diag);
-    if(diag<200){
+    if(diag<300){
         printf("Image Not FOUND\n");
     }
     else {
@@ -80,7 +84,7 @@ int main(int argc, const char * argv[]) {
         printf("P2 = %d and %d\n",res[1].x ,res[1].y);
         printf("P3 = %d and %d\n",res[2].x ,res[2].y);
         printf("P4 = %d and %d\n",res[3].x ,res[3].y);
-    }
+    }*/
     
     return 0;
 }
@@ -117,14 +121,14 @@ void captureImage(){
     
     
 }
-void saveImage(string path){
+cv::Mat saveImage(string path){
     CURL *image;
     CURLcode imgresult;
     FILE *fp;
     image_seq +=1;
     image = curl_easy_init();
-    
-    string image_name="IMAGE_";
+    std::ostringstream stream;
+    	string image_name="IMAGE_";
     image_name =path+image_name+to_string(image_seq)+".BMP";
     printf("%s",image_name.c_str());
     fp = fopen(image_name.c_str(), "wp");
@@ -143,11 +147,14 @@ void saveImage(string path){
             cout << "Cannot grab the image!\n";
         }
     }
-    
     // Clean up the resources
     curl_easy_cleanup(image);
+    
     // Close the file
     fclose(fp);
+    
+    cv::Mat image_mat=imread(image_name);
+    return image_mat;
     
     
 }
@@ -282,7 +289,7 @@ if( !img_object.data || !img_scene.data )
 { std::cout<< " --(!) Error reading images " << std::endl; }
     
     //-- Step 1: Detect the keypoints using SURF Detector
-    int minHessian = 200;
+    int minHessian = 300;
     
     SurfFeatureDetector detector( minHessian );
 
@@ -383,13 +390,14 @@ if( !img_object.data || !img_scene.data )
     line( img_matches, scene_corners[3] , scene_corners[0] , Scalar( 0, 255, 0), 4 );
     
     //-- Show detected matches
+    waitKey(1);
     imshow( "Good Matches & Object detection", img_matches );
     time_t now = time(0);
-    
+    usleep(4000000 );
     // convert now to string form
     char* dt = ctime(&now);
     imwrite( path_do_images+ "output"+dt+".jpg", img_matches );
-    usleep(4000000 );
+    
     //waitKey(0);
     return corners;
     
@@ -485,8 +493,8 @@ void invKinem(){
     
     double r = 3500;
     double z = 3000;
-    long angleStep = 3500;
-    
+    long angleStep = 3000;
+    vector<cv::Point> res;
     double r2 = sqrt(r*r + z*z);
     double t3 = asin( z / r2 );
     double t5 = asin( r / r2 );
@@ -502,17 +510,37 @@ void invKinem(){
     long wrist    = (radian_to_degree( t9 ) * 100 - 1300);
     
     printf("wrist=%ld,elbow=%ld,shoulder=%ld",wrist,elbow,shoulder);
-    //for (long waist = -18000; waist <0; waist += angleStep) {
-        // <HAND_ANGLE> <WRIST_ANGLE> <ELBOW_ANGLE> <SHOULDER_ANGLE> <WAIST_ANGLE> AJMA
-       // sendcommand_AJMA(4500,wrist,elbow,shoulder,waist);
-       // captureImage();
-       // saveImage(path_do_images);
-   // }
-    for (long waist = -18000; waist <0; waist += angleStep) {
-        // <HAND_ANGLE> <WRIST_ANGLE> <ELBOW_ANGLE> <SHOULDER_ANGLE> <WAIST_ANGLE> AJMA
-        sendcommand_AJMA(4500,wrist,-elbow,-shoulder,waist);
+    /* (long waist = -18000; waist <0; waist += angleStep) {
+        //<HAND_ANGLE> <WRIST_ANGLE> <ELBOW_ANGLE> <SHOULDER_ANGLE> <WAIST_ANGLE> AJMA
+        sendcommand_AJMA(4500,wrist,elbow,shoulder,waist);
         captureImage();
-        saveImage(path_do_images);
+       saveImage(path_do_images);
+     }*/
+    for (long waist = -10000; waist <18000; waist += angleStep) {
+        // <HAND_ANGLE> <WRIST_ANGLE> <ELBOW_ANGLE> <SHOULDER_ANGLE> <WAIST_ANGLE> AJMA
+        sendcommand_AJMA(4500,-wrist-600,-elbow,-shoulder,waist);
+        captureImage();
+        Mat model=imread(path_to_model);
+        Mat image;
+        image=saveImage(path_do_images);
+        res=processimage(model, image);
+        double l1 = cv::norm(res.at(0)-res.at(1));
+        double l2 = cv::norm(res.at(0)-res.at(2));
+        double diag=sqrt(pow(l1,2)+pow(l2,2));
+        printf("diag = %f \n",diag);
+        if(diag<300){
+            printf("Image Not FOUND\n");
+        }
+        else {
+            printf("P1 = %d and %d\n",res[0].x ,res[0].y);
+            printf("P2 = %d and %d\n",res[1].x ,res[1].y);
+            printf("P3 = %d and %d\n",res[2].x ,res[2].y);
+            printf("P4 = %d and %d\n",res[3].x ,res[3].y);
+            break;
+        }
+        
+        
+        
     }
     
     

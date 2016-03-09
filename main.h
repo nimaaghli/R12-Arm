@@ -16,7 +16,7 @@
 #include "opencv2/nonfree/features2d.hpp"
 
 void captureImage();
-void saveImage(std::string path_do_images);
+cv::Mat saveImage(std::string path_do_images);
 void sendCommand_TMOVETO(int hand,int wrist,int x,int y,int z);
 void sendCommand_HOME();
 void invKinem();
@@ -29,8 +29,6 @@ std::vector<float> inverse_kinemetics(int x,int y,int z,int l,int a);
 void project1(std::string path_do_images,std::string password);
 std::string password;
 struct tmove;
-std::string path_do_images;
-std::string path_to_model;
 double radian_to_degree(double  ENTER);
 
 
