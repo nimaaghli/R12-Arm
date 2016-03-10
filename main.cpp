@@ -42,7 +42,7 @@ int main(int argc, const char * argv[]) {
     string path_do_images="/Users/nimaaghli/Documents/Couraea/AiRobotics/project1_AIClass/project1_AIClass/img/";
     //password="NAhuygi6djgovuyv";
     //password="ESjdvkasfalkgd";//SHAKERI
-    password="SMkgbku6tc4hxwy";//Mahdi
+    //password="SMkgbku6tc4hxwy";//Mahdi
     
     //password="YMBkbo3yb3b3b3p";
     
@@ -58,17 +58,17 @@ int main(int argc, const char * argv[]) {
         path_to_model=argv[3];
     }
     printf("%s",path_to_model.c_str());
+    scanAndFind();
     //saveImage(path_do_images);
     //sendCommand_HOME();
-    invKinem();
     //captureImage();
     //saveImage(path_do_images);
     
     //project1(path_do_images, password);
     //sendCommand_TMOVETO(3000,-7950, -2500, -1600, 2000);//GO TO BASE
    
-    
-    /*Mat model=imread(path_to_model);
+   
+   /* Mat model=imread(path_to_model);
     Mat image=imread(path_do_images);
     vector<cv::Point> res;
     res=processimage(model, image);
@@ -80,12 +80,13 @@ int main(int argc, const char * argv[]) {
         printf("Image Not FOUND\n");
     }
     else {
+        printf("norm is =%f",cv::norm(res[0]-res[1]));
+        printf("norm is =%f",cv::norm(res[1]-res[2]));
         printf("P1 = %d and %d\n",res[0].x ,res[0].y);
         printf("P2 = %d and %d\n",res[1].x ,res[1].y);
         printf("P3 = %d and %d\n",res[2].x ,res[2].y);
         printf("P4 = %d and %d\n",res[3].x ,res[3].y);
     }*/
-    
     return 0;
 }
 
@@ -289,7 +290,7 @@ if( !img_object.data || !img_scene.data )
 { std::cout<< " --(!) Error reading images " << std::endl; }
     
     //-- Step 1: Detect the keypoints using SURF Detector
-    int minHessian = 300;
+    int minHessian = 100;
     
     SurfFeatureDetector detector( minHessian );
 
@@ -388,10 +389,15 @@ if( !img_object.data || !img_scene.data )
     line( img_matches, scene_corners[1] , scene_corners[2] , Scalar( 0, 255, 0), 4 );
     line( img_matches, scene_corners[2] , scene_corners[3] , Scalar( 0, 255, 0), 4 );
     line( img_matches, scene_corners[3] , scene_corners[0] , Scalar( 0, 255, 0), 4 );
-    
+    cv::Point center;
+    center=findCenter(scene_corners[0], scene_corners[2]);
+    printf("Ceneter Pos is = %d and %d\n",center.x ,center.y);
+    cv::circle(img_matches,center,5,cv::Scalar( 0, 255, 0 ),2,8);
+    cv::circle(img_matches,cv::Point(img_matches.cols/2,img_matches.rows/2),5,cv::Scalar( 255, 0, 0 ),2,8);
+    line( img_matches, cv::Point(img_matches.cols/2,img_matches.rows/2) , center , Scalar( 0, 255, 0), 4 );
     //-- Show detected matches
-    waitKey(1);
     imshow( "Good Matches & Object detection", img_matches );
+    waitKey(1);
     time_t now = time(0);
     usleep(4000000 );
     // convert now to string form
@@ -488,13 +494,9 @@ void project1(string path_do_images,string password){
     
 }
 
-void invKinem(){
-    string path_do_images="/Users/nimaaghli/Documents/Couraea/AiRobotics/project1_AIClass/project1_AIClass/img/";
-    
-    double r = 3500;
-    double z = 3000;
-    long angleStep = 3000;
-    vector<cv::Point> res;
+vector<long> invKinem(double r ,double z){
+   
+    vector<long> res;
     double r2 = sqrt(r*r + z*z);
     double t3 = asin( z / r2 );
     double t5 = asin( r / r2 );
@@ -508,44 +510,20 @@ void invKinem(){
     long elbow    = (radian_to_degree( t2 ) * 100);
     long shoulder = (radian_to_degree( t1 ) * 100);
     long wrist    = (radian_to_degree( t9 ) * 100 - 1300);
-    
     printf("wrist=%ld,elbow=%ld,shoulder=%ld",wrist,elbow,shoulder);
+    res.push_back(elbow);
+    res.push_back(shoulder);
+    res.push_back(wrist);
+    return res;
     /* (long waist = -18000; waist <0; waist += angleStep) {
         //<HAND_ANGLE> <WRIST_ANGLE> <ELBOW_ANGLE> <SHOULDER_ANGLE> <WAIST_ANGLE> AJMA
         sendcommand_AJMA(4500,wrist,elbow,shoulder,waist);
         captureImage();
        saveImage(path_do_images);
      }*/
-    for (long waist = -10000; waist <18000; waist += angleStep) {
-        // <HAND_ANGLE> <WRIST_ANGLE> <ELBOW_ANGLE> <SHOULDER_ANGLE> <WAIST_ANGLE> AJMA
-        sendcommand_AJMA(4500,-wrist-600,-elbow,-shoulder,waist);
-        captureImage();
-        Mat model=imread(path_to_model);
-        Mat image;
-        image=saveImage(path_do_images);
-        res=processimage(model, image);
-        double l1 = cv::norm(res.at(0)-res.at(1));
-        double l2 = cv::norm(res.at(0)-res.at(2));
-        double diag=sqrt(pow(l1,2)+pow(l2,2));
-        printf("diag = %f \n",diag);
-        if(diag<300){
-            printf("Image Not FOUND\n");
-        }
-        else {
-            printf("P1 = %d and %d\n",res[0].x ,res[0].y);
-            printf("P2 = %d and %d\n",res[1].x ,res[1].y);
-            printf("P3 = %d and %d\n",res[2].x ,res[2].y);
-            printf("P4 = %d and %d\n",res[3].x ,res[3].y);
-            break;
-        }
-        
-        
-        
-    }
-    
+  
     
 }
-
 
 
 
@@ -554,3 +532,369 @@ double radian_to_degree(double  ENTER) {
     float degrees = (ENTER * 180) / Pi;
     return degrees;
 }
+
+
+cv::Point findCenter(cv::Point p1,cv::Point p2){
+    cv::Point res;
+    res.x=(p1.x+p2.x)/2;
+    res.y=(p1.y+p2.y)/2;
+    return res;
+}
+void scanAndFind(){
+    string path_do_images="/Users/nimaaghli/Documents/Couraea/AiRobotics/project1_AIClass/project1_AIClass/img/";
+    cv::Point scene_center(320,240);
+    double angleStep=3000;
+    vector<cv::Point> res;
+    vector<long> kinem;
+    cv::Point obj_center;
+    double r=2000;
+    kinem=invKinem(r,3000);
+    long elbow    = kinem.at(0);
+    long shoulder = kinem.at(1);
+    long wrist    = kinem.at(2);
+    for (long waist = -10000; waist <18000; waist += angleStep) {
+        // <HAND_ANGLE> <WRIST_ANGLE> <ELBOW_ANGLE> <SHOULDER_ANGLE> <WAIST_ANGLE> AJMA
+        sendcommand_AJMA(4500,-wrist,-elbow,-shoulder,waist);
+        captureImage();
+        Mat model=imread(path_to_model);
+        Mat image;
+        image=saveImage(path_do_images);
+        //image=imread(path_do_images+"Archive3/IMAGE_6.BMP");
+        res=processimage(model, image);
+        double l1 = cv::norm(res.at(0)-res.at(1));
+        double l2 = cv::norm(res.at(0)-res.at(2));
+        double diag=sqrt(pow(l1,2)+pow(l2,2));
+        printf("diag = %f \n",diag);
+        if(diag<400){
+            printf("Image Not FOUND1\n");
+        }
+        else if((abs(res[0].x -res[1].x)<80)&&(abs(res[0].y -res[1].y)<80)){
+            printf("Image Not FOUND2\n");
+        }
+        else if((abs(res[2].x -res[3].x)<80)&&(abs(res[2].y -res[3].y)<80)){
+            printf("Image Not FOUND3\n");
+        }
+        else {
+            
+            obj_center=findCenter(res[0], res[2]);
+            printf("center obj to scene distance is = %f\n",cv::norm(obj_center-scene_center));
+            printf("P1 = %d and %d\n",res[0].x ,res[0].y);
+            printf("P2 = %d and %d\n",res[1].x ,res[1].y);
+            printf("P3 = %d and %d\n",res[2].x ,res[2].y);
+            printf("P4 = %d and %d\n",res[3].x ,res[3].y);
+            printf("elbow=%ld,shoulder=%ld,waist=%ld\n",-elbow,-shoulder,waist);
+            double dist = cv::norm(obj_center-scene_center);
+            double red=r;
+            double wai=waist;
+            while(dist>100) {
+                if(scene_center.y-obj_center.y>0){
+                    printf("Reduce R\n");
+                    red-=400;
+                    kinem=invKinem(red,3000);
+                    sendcommand_AJMA(4500,-kinem.at(2),-kinem.at(0),-kinem.at(1),wai);
+                    
+                    captureImage();
+                    Mat model=imread(path_to_model);
+                    Mat image;
+                    image=saveImage(path_do_images);
+                    res=processimage(model, image);
+                    obj_center=findCenter(res[0], res[2]);
+                    dist = cv::norm(obj_center-scene_center);
+                    
+                }
+                else{
+                    printf("increase R\n");
+                    red+=400;
+                    kinem=invKinem(red,3000);
+                    sendcommand_AJMA(4500,-kinem.at(2),-kinem.at(0),-kinem.at(1),wai);
+                    
+                    captureImage();
+                    Mat model=imread(path_to_model);
+                    Mat image;
+                    image=saveImage(path_do_images);
+                    res=processimage(model, image);
+                    obj_center=findCenter(res[0], res[2]);
+                    dist = cv::norm(obj_center-scene_center);
+                    
+                }
+                if(scene_center.x-obj_center.x>0){
+                    wai+=400;
+                    sendcommand_AJMA(4500,-kinem.at(2),-kinem.at(0),-kinem.at(1),wai);
+                    captureImage();
+                    Mat model=imread(path_to_model);
+                    Mat image;
+                    image=saveImage(path_do_images);
+                    res=processimage(model, image);
+                    printf("Waist forward\n");
+                    obj_center=findCenter(res[0], res[2]);
+                    dist = cv::norm(obj_center-scene_center);
+                    if (wai>=18000){break;};
+                }
+                else{
+                    wai-=400;
+                    sendcommand_AJMA(4500,-kinem.at(2),-kinem.at(0),-kinem.at(1),wai);
+                    captureImage();
+                    Mat model=imread(path_to_model);
+                    Mat image;
+                    image=saveImage(path_do_images);
+                    res=processimage(model, image);
+                    printf("Waist backward\n");
+                    obj_center=findCenter(res[0], res[2]);
+                    dist = cv::norm(obj_center-scene_center);
+                    if (wai>=18000){break;};
+                }
+                break;
+            }
+  
+            
+        }
+        
+        
+        
+    }
+    
+ 
+    
+    r=3500;
+    kinem=invKinem(r,3000);
+    elbow    = kinem.at(0);
+    shoulder = kinem.at(1);
+    wrist    = kinem.at(2);
+    for (long waist = -10000; waist <18000; waist += angleStep) {
+        // <HAND_ANGLE> <WRIST_ANGLE> <ELBOW_ANGLE> <SHOULDER_ANGLE> <WAIST_ANGLE> AJMA
+        sendcommand_AJMA(4500,-wrist,-elbow,-shoulder,waist);
+        captureImage();
+        Mat model=imread(path_to_model);
+        Mat image;
+        image=saveImage(path_do_images);
+        //image=imread(path_do_images+"Archive3/IMAGE_6.BMP");
+        res=processimage(model, image);
+        double l1 = cv::norm(res.at(0)-res.at(1));
+        double l2 = cv::norm(res.at(0)-res.at(2));
+        double diag=sqrt(pow(l1,2)+pow(l2,2));
+        printf("diag = %f \n",diag);
+        if(diag<400){
+            printf("Image Not FOUND1\n");
+        }
+        else if((abs(res[0].x -res[1].x)<80)&&(abs(res[0].y -res[1].y)<80)){
+            printf("Image Not FOUND2\n");
+        }
+        else if((abs(res[2].x -res[3].x)<80)&&(abs(res[2].y -res[3].y)<80)){
+            printf("Image Not FOUND3\n");
+        }
+        else {
+            
+            obj_center=findCenter(res[0], res[2]);
+            printf("center obj to scene distance is = %f\n",cv::norm(obj_center-scene_center));
+            printf("P1 = %d and %d\n",res[0].x ,res[0].y);
+            printf("P2 = %d and %d\n",res[1].x ,res[1].y);
+            printf("P3 = %d and %d\n",res[2].x ,res[2].y);
+            printf("P4 = %d and %d\n",res[3].x ,res[3].y);
+            printf("elbow=%ld,shoulder=%ld,waist=%ld\n",-elbow,-shoulder,waist);
+            double dist = cv::norm(obj_center-scene_center);
+            double red=r;
+            double wai=waist;
+            while(dist>100) {
+                if(scene_center.y-obj_center.y>0){
+                    printf("Reduce R\n");
+                    red-=100;
+                    kinem=invKinem(red,3000);
+                    sendcommand_AJMA(4500,-kinem.at(2),-kinem.at(0),-kinem.at(1),wai);
+                    
+                    captureImage();
+                    Mat model=imread(path_to_model);
+                    Mat image;
+                    image=saveImage(path_do_images);
+                    res=processimage(model, image);
+                    obj_center=findCenter(res[0], res[2]);
+                    dist = cv::norm(obj_center-scene_center);
+                    
+                }
+                else{
+                    printf("increase R\n");
+                    red+=100;
+                    kinem=invKinem(red,3000);
+                    sendcommand_AJMA(4500,-kinem.at(2),-kinem.at(0),-kinem.at(1),wai);
+                    
+                    captureImage();
+                    Mat model=imread(path_to_model);
+                    Mat image;
+                    image=saveImage(path_do_images);
+                    res=processimage(model, image);
+                    obj_center=findCenter(res[0], res[2]);
+                    dist = cv::norm(obj_center-scene_center);
+                    
+                }
+                if(scene_center.x-obj_center.x>0){
+                    wai+=100;
+                    sendcommand_AJMA(4500,-kinem.at(2),-kinem.at(0),-kinem.at(1),wai);
+                    captureImage();
+                    Mat model=imread(path_to_model);
+                    Mat image;
+                    image=saveImage(path_do_images);
+                    res=processimage(model, image);
+                    printf("Waist forward\n");
+                    obj_center=findCenter(res[0], res[2]);
+                    dist = cv::norm(obj_center-scene_center);
+                    if (wai>=18000){break;};
+                }
+                else{
+                    wai-=100;
+                    sendcommand_AJMA(4500,-kinem.at(2),-kinem.at(0),-kinem.at(1),wai);
+                    captureImage();
+                    Mat model=imread(path_to_model);
+                    Mat image;
+                    image=saveImage(path_do_images);
+                    res=processimage(model, image);
+                    printf("Waist backward\n");
+                    obj_center=findCenter(res[0], res[2]);
+                    dist = cv::norm(obj_center-scene_center);
+                    if (wai>=18000){break;};
+                }
+                
+            }
+            break;
+            
+        }
+        
+        
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+}
+
+
+
+void scanAndFind_1(){
+    cv::Point scene_center(320,240);
+    double angleStep=3000;
+    vector<cv::Point> res;
+    vector<long> kinem;
+    cv::Point obj_center;
+    double r=3500;
+    kinem=invKinem(r,3000);
+    long elbow    = kinem.at(0);
+    long shoulder = kinem.at(1);
+    long wrist    = kinem.at(2);
+    for (long waist = -10000; waist <18000; waist += angleStep) {
+        sendcommand_AJMA(4500,-wrist-600,-elbow,-shoulder,waist);
+        captureImage();
+        Mat model=imread(path_to_model);
+        Mat image;
+        image=saveImage(path_do_images);
+        //image=imread(path_do_images+"Archive3/IMAGE_6.BMP");
+        res=processimage(model, image);
+        double l1 = cv::norm(res.at(0)-res.at(1));
+        double l2 = cv::norm(res.at(0)-res.at(2));
+        double diag=sqrt(pow(l1,2)+pow(l2,2));
+        printf("diag = %f \n",diag);
+        if(diag<400){
+            printf("Image Not FOUND1\n");
+        }
+        else if((abs(res[0].x -res[1].x)<80)&&(abs(res[0].y -res[1].y)<80)){
+            printf("Image Not FOUND2\n");
+        }
+        else if((abs(res[2].x -res[3].x)<80)&&(abs(res[2].y -res[3].y)<80)){
+            printf("Image Not FOUND3\n");
+        }
+        else {
+            
+            obj_center=findCenter(res[0], res[2]);
+            printf("center obj to scene distance is = %f\n",cv::norm(obj_center-scene_center));
+            printf("P1 = %d and %d\n",res[0].x ,res[0].y);
+            printf("P2 = %d and %d\n",res[1].x ,res[1].y);
+            printf("P3 = %d and %d\n",res[2].x ,res[2].y);
+            printf("P4 = %d and %d\n",res[3].x ,res[3].y);
+            printf("elbow=%ld,shoulder=%ld,waist=%ld\n",-elbow,-shoulder,waist);
+            double dist = cv::norm(obj_center-scene_center);
+            double red=r;
+            double wai=waist;
+            while(dist>100) {
+                if(scene_center.y-obj_center.y>0){
+                    printf("Reduce R\n");
+                    red-=200;
+                    kinem=invKinem(red,3000);
+                    sendcommand_AJMA(4500,-kinem.at(2)-600,-kinem.at(0),-kinem.at(1),wai);
+                    
+                    captureImage();
+                    Mat model=imread(path_to_model);
+                    Mat image;
+                    image=saveImage(path_do_images);
+                    res=processimage(model, image);
+                    obj_center=findCenter(res[0], res[2]);
+                    
+                }
+                else{
+                    printf("increase R\n");
+                    red+=200;
+                    kinem=invKinem(red,3000);
+                    sendcommand_AJMA(4500,-kinem.at(2)-600,-kinem.at(0),-kinem.at(1),wai);
+                    
+                    captureImage();
+                    Mat model=imread(path_to_model);
+                    Mat image;
+                    image=saveImage(path_do_images);
+                    res=processimage(model, image);
+                    obj_center=findCenter(res[0], res[2]);
+                    
+                }
+                if(scene_center.x-obj_center.x>0){
+                    wai+=200;
+                    sendcommand_AJMA(4500,-kinem.at(2)-600,-kinem.at(0),-kinem.at(1),wai);
+                    captureImage();
+                    Mat model=imread(path_to_model);
+                    Mat image;
+                    image=saveImage(path_do_images);
+                    res=processimage(model, image);
+                    printf("Waist forward\n");
+                    obj_center=findCenter(res[0], res[2]);
+                    if (wai>=18000){break;};
+                }
+                else{
+                    wai-=200;
+                    sendcommand_AJMA(4500,-kinem.at(2)-600,-kinem.at(0),-kinem.at(1),wai);
+                    captureImage();
+                    Mat model=imread(path_to_model);
+                    Mat image;
+                    image=saveImage(path_do_images);
+                    res=processimage(model, image);
+                    printf("Waist backward\n");
+                    obj_center=findCenter(res[0], res[2]);
+                    if (wai>=18000){break;};
+                }
+                
+            }
+            
+            break;
+        }
+        
+        
+        
+    }
+    
+}
+
+
+
+
+
+
+
+
+

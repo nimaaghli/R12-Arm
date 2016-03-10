@@ -19,7 +19,7 @@ void captureImage();
 cv::Mat saveImage(std::string path_do_images);
 void sendCommand_TMOVETO(int hand,int wrist,int x,int y,int z);
 void sendCommand_HOME();
-void invKinem();
+std::vector<long> invKinem(double r ,double z);
 void captureSave(std::string path);
 int  wrist,hand;
 int  image_seq;
@@ -30,6 +30,10 @@ void project1(std::string path_do_images,std::string password);
 std::string password;
 struct tmove;
 double radian_to_degree(double  ENTER);
+cv::Point findCenter(cv::Point p1,cv::Point p2);
+void scanAndFind();
+void scanAndFind();
+
 
 
 
