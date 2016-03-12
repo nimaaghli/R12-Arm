@@ -547,14 +547,14 @@ void scanAndFind(){
     vector<cv::Point> res;
     vector<long> kinem;
     cv::Point obj_center;
-    double r=2000;
+    double r=2500;
     kinem=invKinem(r,3000);
     long elbow    = kinem.at(0);
     long shoulder = kinem.at(1);
     long wrist    = kinem.at(2);
     for (long waist = -10000; waist <18000; waist += angleStep) {
         // <HAND_ANGLE> <WRIST_ANGLE> <ELBOW_ANGLE> <SHOULDER_ANGLE> <WAIST_ANGLE> AJMA
-        sendcommand_AJMA(4500,-wrist,-elbow,-shoulder,waist);
+        sendcommand_AJMA(4500,-wrist-400,-elbow,-shoulder,waist);
         captureImage();
         Mat model=imread(path_to_model);
         Mat image;
@@ -589,9 +589,9 @@ void scanAndFind(){
             while(dist>100) {
                 if(scene_center.y-obj_center.y>0){
                     printf("Reduce R\n");
-                    red-=400;
+                    red-=200;
                     kinem=invKinem(red,3000);
-                    sendcommand_AJMA(4500,-kinem.at(2),-kinem.at(0),-kinem.at(1),wai);
+                    sendcommand_AJMA(4500,-kinem.at(2)-400,-kinem.at(0),-kinem.at(1),wai);
                     
                     captureImage();
                     Mat model=imread(path_to_model);
@@ -604,9 +604,9 @@ void scanAndFind(){
                 }
                 else{
                     printf("increase R\n");
-                    red+=400;
+                    red+=200;
                     kinem=invKinem(red,3000);
-                    sendcommand_AJMA(4500,-kinem.at(2),-kinem.at(0),-kinem.at(1),wai);
+                    sendcommand_AJMA(4500,-kinem.at(2)-400,-kinem.at(0),-kinem.at(1),wai);
                     
                     captureImage();
                     Mat model=imread(path_to_model);
@@ -618,8 +618,8 @@ void scanAndFind(){
                     
                 }
                 if(scene_center.x-obj_center.x>0){
-                    wai+=400;
-                    sendcommand_AJMA(4500,-kinem.at(2),-kinem.at(0),-kinem.at(1),wai);
+                    wai+=200;
+                    sendcommand_AJMA(4500,-kinem.at(2)-400,-kinem.at(0),-kinem.at(1),wai);
                     captureImage();
                     Mat model=imread(path_to_model);
                     Mat image;
@@ -631,8 +631,8 @@ void scanAndFind(){
                     if (wai>=18000){break;};
                 }
                 else{
-                    wai-=400;
-                    sendcommand_AJMA(4500,-kinem.at(2),-kinem.at(0),-kinem.at(1),wai);
+                    wai-=200;
+                    sendcommand_AJMA(4500,-kinem.at(2)-400,-kinem.at(0),-kinem.at(1),wai);
                     captureImage();
                     Mat model=imread(path_to_model);
                     Mat image;
@@ -643,10 +643,9 @@ void scanAndFind(){
                     dist = cv::norm(obj_center-scene_center);
                     if (wai>=18000){break;};
                 }
-                break;
+                
             }
-  
-            
+            break;
         }
         
         
@@ -830,7 +829,7 @@ void scanAndFind_1(){
                     printf("Reduce R\n");
                     red-=200;
                     kinem=invKinem(red,3000);
-                    sendcommand_AJMA(4500,-kinem.at(2)-600,-kinem.at(0),-kinem.at(1),wai);
+                    sendcommand_AJMA(4500,-kinem.at(2)-200,-kinem.at(0),-kinem.at(1),wai);
                     
                     captureImage();
                     Mat model=imread(path_to_model);
@@ -844,7 +843,7 @@ void scanAndFind_1(){
                     printf("increase R\n");
                     red+=200;
                     kinem=invKinem(red,3000);
-                    sendcommand_AJMA(4500,-kinem.at(2)-600,-kinem.at(0),-kinem.at(1),wai);
+                    sendcommand_AJMA(4500,-kinem.at(2)-200,-kinem.at(0),-kinem.at(1),wai);
                     
                     captureImage();
                     Mat model=imread(path_to_model);
@@ -856,7 +855,7 @@ void scanAndFind_1(){
                 }
                 if(scene_center.x-obj_center.x>0){
                     wai+=200;
-                    sendcommand_AJMA(4500,-kinem.at(2)-600,-kinem.at(0),-kinem.at(1),wai);
+                    sendcommand_AJMA(4500,-kinem.at(2)-200,-kinem.at(0),-kinem.at(1),wai);
                     captureImage();
                     Mat model=imread(path_to_model);
                     Mat image;
@@ -868,7 +867,7 @@ void scanAndFind_1(){
                 }
                 else{
                     wai-=200;
-                    sendcommand_AJMA(4500,-kinem.at(2)-600,-kinem.at(0),-kinem.at(1),wai);
+                    sendcommand_AJMA(4500,-kinem.at(2)-200,-kinem.at(0),-kinem.at(1),wai);
                     captureImage();
                     Mat model=imread(path_to_model);
                     Mat image;
